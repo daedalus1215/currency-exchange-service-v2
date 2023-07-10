@@ -21,7 +21,7 @@ public class CurrencyExchangeController {
         if (byFromAndTo == null) {
             throw new RuntimeException("Unable to find data for " + from + " to " + to);
         }
-
+        byFromAndTo.setEnvironment(environment.getProperty("server.port"));
         return byFromAndTo;
     }
 }
