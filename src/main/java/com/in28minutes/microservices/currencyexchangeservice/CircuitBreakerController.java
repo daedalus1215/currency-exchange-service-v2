@@ -13,11 +13,15 @@ public class CircuitBreakerController {
     private Logger logger = LoggerFactory.getLogger(CircuitBreakerController.class);
 
     @GetMapping("/sample-api")
-    @Retry(name = "default")
+    @Retry(name = "default", fallbackMethod = "  hardcodedResponse")
     public String sampleApi() throws Exception {
         logger.info("Sample Api call received");
         final ResponseEntity<String> forEntity = new RestTemplate()
                 .getForEntity("http://localhost-not-going-to-work", String.class);
         throw new Exception("nop[e");
+    }
+
+    public String hardcodedResponse(Exception ex) {
+        return "fallback-response";
     }
 }
