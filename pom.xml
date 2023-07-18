@@ -16,6 +16,8 @@
     <properties>
         <java.version>17</java.version>
         <spring-cloud.version>2022.0.3</spring-cloud.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
     <dependencies>
         <dependency>
@@ -58,10 +60,6 @@
             <artifactId>zipkin-reporter-brave</artifactId>
         </dependency>
         <!--        Che3cking out this-->
-
-
-
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -79,10 +77,16 @@
             <version>4.0.2</version>
         </dependency>
         <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
+            <version>0.43.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -101,13 +105,35 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+
+            <!--        experimental (start)-->
+
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.43.0</version>
                 <configuration>
-                    <image>
-                        <name>daedalus1215/${project.artifactId}:${project.version}</name>
-                    </image>
-                    <pullPolicy>IF_NOT_PRESENT</pullPolicy>
+                    <dockerHost>unix://localhost:2375</dockerHost>
+                    <images>
+                        <image>
+                            <name>currency-exchange-service:latest</name>
+                            <build>
+                                <!-- Use a Java 17 compatible base image -->
+                                <from>openjdk:17-jdk-slim</from>
+                                <dockerFileDir>${project.basedir}</dockerFileDir>
+                                <assembly>
+                                    <!-- Adjust this to your project's target output directory -->
+                                    <targetDir>/target</targetDir>
+                                    <descriptorRef>artifact</descriptorRef>
+                                </assembly>
+                            </build>
+                        </image>
+                    </images>
                 </configuration>
             </plugin>
+            <!--        experimental (end)-->
         </plugins>
     </build>
 
