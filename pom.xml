@@ -106,34 +106,21 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-
-
-            <!--        experimental (start)-->
-
             <plugin>
-                <groupId>io.fabric8</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>0.43.0</version>
+                <!-- Build an executable JAR -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
                 <configuration>
-                    <dockerHost>unix://localhost:2375</dockerHost>
-                    <images>
-                        <image>
-                            <name>currency-exchange-service:latest</name>
-                            <build>
-                                <!-- Use a Java 17 compatible base image -->
-                                <from>openjdk:17-jdk-slim</from>
-                                <dockerFileDir>${project.basedir}</dockerFileDir>
-                                <assembly>
-                                    <!-- Adjust this to your project's target output directory -->
-                                    <targetDir>/target</targetDir>
-                                    <descriptorRef>artifact</descriptorRef>
-                                </assembly>
-                            </build>
-                        </image>
-                    </images>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>com.in28minutes.microservices.currencyexchangeservice.CurrencyExchangeServiceApplication</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
-            <!--        experimental (end)-->
         </plugins>
     </build>
 
